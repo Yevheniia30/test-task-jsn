@@ -19,23 +19,38 @@ class HeroController {
     return res.json(heroes);
   }
 
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     console.log("req params", req.params);
-    const { id } = req.params;
-    const hero = await Hero.findOne({ where: { id } });
-    return res.json(hero);
+    try {
+      const { id } = req.params;
+      const hero = await Hero.findOne({ where: { id } });
+      console.log('HERO', hero)
+      if(hero){
+        return res.json(hero);
+ 
+      } else {
+        throw new Error(ApiError.badRequest(error.message))
+      }
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
 
-  async create(req, res) {
+  async create(req, res, next) {
     console.log("req.body", req.body);
-    console.log('req.files', req.files);
-    const {nickname, real_name}=req.body
-    const {images}=req.files
-    let filename=uuid.v4()+'.jpg'
-    images.mv(path.resolve(__dirname, '..', 'uploads', filename))
-
-    const hero = await Hero.create({...req.body, images: filename});
-    return res.json(hero);
+    console.log("req.files", req.files);
+    // const { nickname, real_name } = req.body;
+    try {
+      const { images } = req.files;
+      let filename = uuid.v4() + ".jpg";
+      images.mv(path.resolve(__dirname, "..", "uploads", filename));
+  
+      const hero = await Hero.create({ ...req.body, images: filename });
+      return res.json(hero);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+   
   }
 
   async delete(req, res) {
@@ -63,17 +78,16 @@ class HeroController {
         config.images = fileName;
       }
 
-      const hero = await Hero.update(
-        config,
-        {
-          where: {
-            id,
-          },
-        }
-      );
-      console.log('HERO', hero, 'RES body', res);
-    //   return req.body
-      return res.json(hero);
+      const hero = await Hero.update(config, {
+        where: {
+          id,
+        },
+      });
+      console.log("CONFIG", config);
+      // console.log("HERO", hero, "RES body", res);
+      //   return req.body
+      // return res.json(hero)
+      return res.json({ id, ...config });
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

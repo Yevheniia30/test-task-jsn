@@ -5,13 +5,26 @@ const instance = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
-export const getHeroes = createAsyncThunk("heroes/getHero", async () => {
-  const { data } = await instance.get();
-  console.log("data", data);
+export const getHeroes = createAsyncThunk(
+  "heroes/getHeroes",
+  async ({ page, limit }) => {
+    console.log("page, limit", page, limit);
+    const { data } = await instance.get("/", {
+      params: {
+        page,
+        limit,
+      },
+    });
+    console.log("data", data);
+    return data;
+  }
+);
+
+export const getHero = createAsyncThunk("heroes/getHero", async (id) => {
+  const { data } = await instance.get(`/${id}`);
+  console.log('data', data);
   return data;
 });
-
-export const getHero = createAsyncThunk();
 
 export const createHero = createAsyncThunk(
   "heroes/create",
@@ -22,7 +35,7 @@ export const createHero = createAsyncThunk(
           "multipart/form-data; boundary=<calculated when request is sent>",
       },
     });
-    console.log("data", data);
+    // console.log("data", data);
     return data;
   }
 );

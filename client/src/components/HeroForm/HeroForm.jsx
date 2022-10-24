@@ -1,15 +1,11 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import { Formik } from "formik";
+import {InputGroup, Button, Form} from "react-bootstrap";
 import { useState } from "react";
-
 import { useDispatch } from "react-redux";
 import { createHero, updateHero } from "redux/heroes/heroesOperations";
 
 export const HeroForm = ({ item, onHide }) => {
   const dispatch = useDispatch();
-  console.log("item", item);
+  // console.log("item", item);
 
   const [state, setState] = useState(
     item
@@ -32,8 +28,6 @@ export const HeroForm = ({ item, onHide }) => {
     superpowers,
     images,
   } = state;
-
-  // const [file, setfile] = useState("");
 
   // const initialValues = {
   //   nickname: "",
@@ -64,6 +58,7 @@ export const HeroForm = ({ item, onHide }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log('values', values);
+
     let formData = new FormData();
     formData.append("nickname", state.nickname);
     formData.append("real_name", state.real_name);
@@ -71,26 +66,25 @@ export const HeroForm = ({ item, onHide }) => {
     formData.append("origin_description", state.origin_description);
     formData.append("superpowers", state.superpowers);
     formData.append("images", state.images);
-    if(item){
-      formData.append('id', item.id)
+    if (item) {
+      formData.append("id", item.id);
     }
     console.log("formdata", formData);
     item ? dispatch(updateHero(formData)) : dispatch(createHero(formData));
     setState((prevValues) => ({
       ...prevValues,
-      // we use the name to tell Formik which key of `values` to update
       [e.target.name]: "",
     }));
     onHide();
   };
 
   return (
-    <Form onSubmit={handleSubmit} encType="multipart/form">
+    <Form onSubmit={handleSubmit} encType="multipart/form-data">
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Nickname</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Enter email"
+          placeholder="Enter nickname"
           name="nickname"
           value={nickname}
           onChange={handleChange}
@@ -104,18 +98,21 @@ export const HeroForm = ({ item, onHide }) => {
         <Form.Label>Real name</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Password"
+          placeholder="Enter real name"
           name="real_name"
           value={real_name}
           onChange={handleChange}
         />
+         <Form.Text className="text-muted">
+          The real name must be unique
+        </Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Catch phrase</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Password"
+          placeholder="Catch phrase"
           name="catch_phrase"
           value={catch_phrase}
           onChange={handleChange}
@@ -158,7 +155,11 @@ export const HeroForm = ({ item, onHide }) => {
       {/* <Form.Group className="mb-3" controlId="formBasicCheckbox"> */}
       {/* <Form.Check type="checkbox" label="Check me out" /> */}
       {/* </Form.Group> */}
-      <Button variant="primary" type="submit">
+      <Button
+        variant="primary"
+        type="submit"
+        disabled={!nickname || !real_name}
+      >
         Submit
       </Button>
     </Form>
