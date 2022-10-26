@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "uploads")));
-app.use(fileUpload({}));
+// app.use(fileUpload({}));
 app.use("/api", router);
 
 // error handling must be the last middleware

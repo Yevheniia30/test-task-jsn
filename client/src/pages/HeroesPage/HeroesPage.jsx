@@ -34,13 +34,17 @@ export const HeroesPage = () => {
     setItemToEdit(item);
   };
 
+  const handleHide=()=>{
+    setIsShow(false)
+    setItemToEdit(null)
+  }
+
   const pages = [];
   for (let i = 0; i < pagesCount; i++) {
     pages.push(i + 1);
   }
 
-  // console.log("pages", pages);
-
+  
   return (
     <>
       <Container>
@@ -59,16 +63,17 @@ export const HeroesPage = () => {
               xs={12}
               md={4}
               lg={3}
-              style={{ marginBottom: "20px" }}
+              className="mb-3"
+              // style={{ marginBottom: "20px" }}
             >
               <Card
                 onMouseOver={() => setActions(item.id)}
                 onMouseLeave={() => setActions(null)}
               >
                 <Card.Img
-                  src={`http://localhost:5000/${item.images}`}
+                  src={item?.Images?.length? `http://localhost:5000/${JSON.parse(item?.Images[0]).filename}` :''}
                   alt={item.nickname}
-                  style={{ objectFit: "cover", height: "300px" }}
+                  style={{ height: "300px" }}
                 />
                 <Card.Body>
                   <Link
@@ -116,9 +121,9 @@ export const HeroesPage = () => {
       <FormModal
         show={isShow}
         item={itemToEdit?.nickname}
-        onHide={() => setIsShow(false)}
+        onHide={handleHide}
       >
-        <HeroForm item={itemToEdit} onHide={() => setIsShow(false)} />
+        <HeroForm item={itemToEdit} onHide={handleHide} />
       </FormModal>
     </>
   );

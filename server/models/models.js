@@ -9,7 +9,7 @@ const Hero = sequelize.define("hero", {
   superpowers: { type: DataTypes.STRING },
   catch_phrase: { type: DataTypes.STRING },
   images: { type: DataTypes.STRING },
-  // Images: {type: DataTypes.ARRAY(DataTypes.STRING)},
+  Images: {type: DataTypes.ARRAY(DataTypes.STRING)},
 });
 
 module.exports = {

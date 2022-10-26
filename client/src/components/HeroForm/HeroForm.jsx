@@ -1,11 +1,11 @@
-import {InputGroup, Button, Form} from "react-bootstrap";
+import { InputGroup, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createHero, updateHero } from "redux/heroes/heroesOperations";
 
 export const HeroForm = ({ item, onHide }) => {
   const dispatch = useDispatch();
-  // console.log("item", item);
+  console.log("item", item);
 
   const [state, setState] = useState(
     item
@@ -16,7 +16,7 @@ export const HeroForm = ({ item, onHide }) => {
           catch_phrase: "",
           origin_description: "",
           superpowers: "",
-          images: "",
+          Images: '',
         }
   );
 
@@ -26,7 +26,7 @@ export const HeroForm = ({ item, onHide }) => {
     catch_phrase,
     origin_description,
     superpowers,
-    images,
+    Images,
   } = state;
 
   // const initialValues = {
@@ -38,13 +38,15 @@ export const HeroForm = ({ item, onHide }) => {
   //   images: "",
   // };
 
+  console.log("STATE", state);
+
   const handleChange = (e) => {
-    console.log("e target", e.target);
-    if (e.target.name === "images") {
+    console.log("e target", e.target.files);
+    if (e.target.name === "Images") {
       setState((prevValues) => ({
         ...prevValues,
         // we use the name to tell Formik which key of `values` to update
-        [e.target.name]: e.target.files[0],
+        [e.target.name]: e.target.files,
       }));
     } else {
       setState((prevValues) => ({
@@ -65,7 +67,13 @@ export const HeroForm = ({ item, onHide }) => {
     formData.append("catch_phrase", state.catch_phrase);
     formData.append("origin_description", state.origin_description);
     formData.append("superpowers", state.superpowers);
-    formData.append("images", state.images);
+
+    // for (let i = 0; i < Images.length; i++) {
+    //   formData.append(`Images`, Images[i]);
+    // }
+    for (let i = 0 ; i < state.Images.length ; i++) { formData.append("Images", state.Images[i]); }
+
+    // formData.append("Images", state.Images);
     if (item) {
       formData.append("id", item.id);
     }
@@ -79,7 +87,7 @@ export const HeroForm = ({ item, onHide }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} encType="multipart/form-data">
+    <Form onSubmit={handleSubmit} method="post" encType="multipart/form-data">
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Nickname</Form.Label>
         <Form.Control
@@ -103,7 +111,7 @@ export const HeroForm = ({ item, onHide }) => {
           value={real_name}
           onChange={handleChange}
         />
-         <Form.Text className="text-muted">
+        <Form.Text className="text-muted">
           The real name must be unique
         </Form.Text>
       </Form.Group>
@@ -119,8 +127,8 @@ export const HeroForm = ({ item, onHide }) => {
         />
       </Form.Group>
 
-      <InputGroup>
-        <InputGroup.Text>Description</InputGroup.Text>
+      <Form.Group className="mb-3">
+        <Form.Label>Description</Form.Label>
         <Form.Control
           as="textarea"
           aria-label="With textarea"
@@ -128,10 +136,10 @@ export const HeroForm = ({ item, onHide }) => {
           value={origin_description}
           onChange={handleChange}
         />
-      </InputGroup>
+      </Form.Group>
 
-      <InputGroup>
-        <InputGroup.Text>Superpowers</InputGroup.Text>
+      <Form.Group className="mb-3">
+        <Form.Label>Superpowers</Form.Label>
         <Form.Control
           as="textarea"
           aria-label="With textarea"
@@ -139,14 +147,14 @@ export const HeroForm = ({ item, onHide }) => {
           value={superpowers}
           onChange={handleChange}
         />
-      </InputGroup>
+      </Form.Group>
 
       {/* <form encType="multipart/form-data"> */}
       {/* <label for="file" class="label"></label> */}
       <input
         type="file"
-        name="images"
-        files={images}
+        name="Images"
+        files={Images}
         multiple
         onChange={handleChange}
       />

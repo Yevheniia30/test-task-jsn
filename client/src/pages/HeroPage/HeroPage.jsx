@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, ListGroup, Card, Button, Row, Col } from "react-bootstrap";
 import { FaArrowLeft } from "react-icons/fa";
 import { getHero } from "redux/heroes/heroesOperations";
 import { Loader } from "components/Loader";
@@ -37,25 +37,27 @@ export const HeroPage = () => {
       )}
       {hero && (
         <>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "start",
-              marginBottom: "20px",
-              alignItems: "center",
-            }}
+          <Col
+            className="d-flex justify-content-start align-items-center
+           mb-3"
           >
             <Button variant="secondary" onClick={goBack}>
               {" "}
               <FaArrowLeft /> Go back
             </Button>
-          </div>
+          </Col>
 
-          <Card style={{ width: "50rem" }}>
-            <Card.Img
+          <Card style={{ width: "18rem" }}>
+            {hero?.Images.map(item=>(
+                <Card.Img key={item}
+                variant="top"
+                src={`http://localhost:5000/${JSON.parse(item).filename}`}
+              />
+            ))}
+            {/* <Card.Img
               variant="top"
               src={`http://localhost:5000/${hero.images}`}
-            />
+            /> */}
             <Card.Body>
               <Card.Title>{hero.nickname}</Card.Title>
               <Card.Text>{hero.real_name}</Card.Text>

@@ -8,9 +8,9 @@ const heroController = require("../controllers/heroController");
 //     res.status(200).json({message: 'woooork'})
 // })
 router.get("/", heroController.get);
-router.post("/create", heroController.create);
+router.post("/create",heroController.upload, heroController.create);
 router.get("/:id", heroController.getOne);
 router.delete("/:id", heroController.delete);
-router.patch("/update", heroController.update);
+router.patch("/update", heroController.upload, heroController.update);
 
 module.exports = router;
